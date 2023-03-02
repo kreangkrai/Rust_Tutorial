@@ -24,14 +24,6 @@ impl<T> Stack<T> {
     fn peek(&self) -> Option<&T> {
         self.stack.last()
     }
-    fn read(&mut self) -> Vec<T> {
-        let mut jobs = vec![];
-        while !self.stack.is_empty() {
-            let j = self.pop().unwrap();
-            jobs.push(j);
-        }
-        jobs
-    }
 }
 fn main() {
     let mut s:Stack<i32> = Stack::new();
