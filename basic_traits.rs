@@ -28,17 +28,15 @@ impl Shape for Triangle {
     }
 }
 fn main() {
-    let rec = Rectangle{
+    let rectangle = Rectangle{
         width : 3.2,
         height : 5.4,
     };
-    rec.area();
-    rec.print_area();
+    rectangle.print_area();
 
     let triangle = Triangle{
         base : 3.2,
         height : 5.4,
     };
-    triangle.area();
     triangle.print_area();
 }
