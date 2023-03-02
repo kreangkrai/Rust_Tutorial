@@ -1,9 +1,9 @@
 use regex::Regex;
 fn main() -> Result<(),regex::Error>{
      let text = "Crypto.BTC/USD,Crypto.ETH/USD,Crypto.SOL/USD";
-     let re = Regex::new(r"\.(?P<name>\w+)/")?;
-     let res = re.captures_iter(text);
-     for mat in res{
+     let reg = Regex::new(r"\.(?P<name>\w+)/")?;
+     let word = reg.captures_iter(text);
+     for mat in word{
           println!("Name : {:?}",&mat["name"]);        
      }
      Ok(())
