@@ -16,7 +16,8 @@ fn main() -> Result<(),regex::Error>{
                          .enumerate()
                          .filter(|(_,c)| *c == '.')
                          .map(|(i,_)|{
-              let slash = text[(i+1)..].find('/').unwrap();                                                                         &text[(i+1)..(i + slash +1)] as &str
+              let slash = text[(i+1)..].find('/').unwrap();                                                                         
+              &text[(i+1)..(i + slash +1)] as &str
     }).collect();
     println!("{:?}",word);
 }
