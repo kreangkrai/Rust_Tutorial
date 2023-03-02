@@ -6,8 +6,8 @@ fn main() {
     let v3 = vec![11,-2,0,1,9];
     let mut hm:HashMap<i32,i32> = HashMap::new();
     let v = v1.into_iter()
-                                       .chain(v2.into_iter())
-                                       .chain(v3.into_iter());
+            .chain(v2.into_iter())
+            .chain(v3.into_iter());
     for n in v.into_iter(){
         *hm.entry(n).or_insert(0) +=1;
     }
