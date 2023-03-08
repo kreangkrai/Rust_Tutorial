@@ -1,11 +1,11 @@
 //Basic Enum in Rust Programing Language
-
 use std::rc::Rc;
 use crate::List::{Cons,Nil};
 #[derive(Debug)]
 enum Color{
     Red,
-    Green,Blue,
+    Green,
+    Blue,
 }
 #[derive(Debug)]
 enum List{
