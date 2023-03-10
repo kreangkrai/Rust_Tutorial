@@ -8,7 +8,7 @@
 use std::collections::HashMap;
 fn exception(nums1:Vec<i32>,nums2:Vec<i32>,nums3:Vec<i32>) -> Vec<i32>{
     let nums = [nums1,nums2,nums3];
-    let mut hms:Vec<HashMap<i32,i32>> = vec![HashMap::new();3];
+    let mut hms:Vec<HashMap<i32,i32>> = vec![HashMap::new();nums.len()];
     let mut hm :HashMap<i32,i32> = HashMap::new();
     let mut vec = vec![];
     for i in 0..nums.len(){
