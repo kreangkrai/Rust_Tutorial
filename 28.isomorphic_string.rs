@@ -2,6 +2,9 @@
 
 use std::collections::{HashMap,HashSet};
 pub fn is_isomorphic(s: String, t: String) -> bool {
+    if s.len() != t.len(){
+        return false;
+    }
     let mut hm:HashMap<u8,u8> = HashMap::new();
     for n in 0..s.as_bytes().len(){
         hm.entry(s.clone().into_bytes()[n]).or_insert(t.clone().into_bytes()[n]);
