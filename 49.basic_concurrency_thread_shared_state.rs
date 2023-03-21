@@ -3,6 +3,7 @@ use std::ops::Add;
 use std::thread;
 use std::time::Duration;
 use std::sync::{Arc,Mutex};
+use rand::Rng;
 #[derive(Debug,Clone,Copy)]
 struct Point<T>{
     x:T,
@@ -28,11 +29,12 @@ fn main() {
 
     let points:Vec<Point<i32>> = vec![];
     let data = Arc::new(Mutex::new(points));
-    let handler:Vec<_> = (0..1000).map(|i|{
+    let handler:Vec<_> = (0..1000).map(|_|{
         let data = Arc::clone(&data);
         thread::spawn(move || {
+            let mut rng = rand::thread_rng();
             let mut data = data.lock().unwrap();
-            data.push(Point::new(i,i+1) + Point::new(1, 1));
+            data.push(Point::new(rng.gen_range(0..9),rng.gen_range(0..9)) + Point::new(1, 1));
         })
      }).collect();
     for h in handler{
