@@ -13,19 +13,19 @@
      [[1,0]] = 4
  */
 #[allow(dead_code)]
-struct Solution {}
+struct Solution{}
 #[allow(dead_code,unused_assignments)]
 impl Solution {
-    fn island_perimeter(grid: Vec<Vec<i32>>) -> i32 {
+    fn island_perimeter(grid:Vec<Vec<i32>>) ->i32{
         let mut sum_perimeter = 0;
         let mut perimeter = 4;
-        let lenght = grid.len();
+        let length = grid.len();
 
-        for i in 0..lenght {
-            for j in 0..grid[i].len() {
+        for i in 0..length{
+            for j in 0..grid[i].len(){
                 perimeter = 4;
                 if grid[i][j] == 1 {
-                    if i < lenght - 1 {
+                    if i < length - 1 {
                         if grid[i + 1][j] == 1 {
                             perimeter -= 1;
                         }
@@ -35,7 +35,7 @@ impl Solution {
                             perimeter -= 1;
                         }
                     }
-                    if j < grid[i].len() - 1 {
+                    if j < grid[i].len() - 1{
                         if grid[i][j + 1] == 1 {
                             perimeter -= 1;
                         }
@@ -45,7 +45,7 @@ impl Solution {
                             perimeter -= 1;
                         }
                     }
-                } else {
+                }else{
                     perimeter = 0;
                 }
                 sum_perimeter += perimeter;
