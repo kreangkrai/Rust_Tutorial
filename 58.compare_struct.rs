@@ -1,4 +1,4 @@
-//Compare Struc
+//Compare Two Struct
 #[derive(Debug)]
 struct Point<T> {
     x:T,
