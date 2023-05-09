@@ -85,15 +85,16 @@ impl TICTACTOE {
             if self.is_valid(position){
                 self.arr[position-1] = p;
                 self.print();
-
-                if self.is_over(){
-                    println!("Game Over!!!");
-                    break;
-                }
+        
                 if self.is_won(){
                     println!("'{}' is Won",p);
                     break;
                 }
+                if self.is_over(){
+                    println!("Game Over!!!");
+                    break;
+                }
+               
                 if p == "X" {
                     p = "O";
                 }else{
