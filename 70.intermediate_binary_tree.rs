@@ -244,6 +244,42 @@ impl TreeNode {
         }
         res
     }
+    fn bfs_left_leaf(&self)->Vec<i32>{
+        let mut res = vec![];
+        let mut queue = std::collections::VecDeque::new();
+        queue.push_back((self.clone(),false));
+        while queue.len() > 0 {
+            let node = queue.pop_front().unwrap();
+            if node.0.left.is_none() && node.0.right.is_none() && node.1 == true{
+                res.push(node.0.val);
+            }
+            if let Some(l) = node.0.left.clone() {
+                queue.push_back((l.borrow().clone(),true));
+            }
+            if let Some(r) = node.0.right.clone(){
+                queue.push_back((r.borrow().clone(),false));
+            }
+        }
+        res
+    }
+    fn bfs_right_leaf(&self)->Vec<i32>{
+        let mut res = vec![];
+        let mut queue = std::collections::VecDeque::new();
+        queue.push_back((self.clone(),false));
+        while queue.len() > 0 {
+            let node = queue.pop_front().unwrap();
+            if node.0.left.is_none() && node.0.right.is_none() && node.1 == true{
+                res.push(node.0.val);
+            }
+            if let Some(l) = node.0.left.clone() {
+                queue.push_back((l.borrow().clone(),false));
+            }
+            if let Some(r) = node.0.right.clone(){
+                queue.push_back((r.borrow().clone(),true));
+            }
+        }
+        res
+    }
     // fn insert(&mut self, val: i32) {
     //     if self.val == val {
     //         return;
@@ -265,6 +301,34 @@ impl TreeNode {
     //         }
     //     }
     // }
+}
+
+fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+    let mut res = vec![];
+    let mut queue = std::collections::VecDeque::new();
+    queue.push_back(root.clone());
+    while queue.len() > 0 {
+        let bound = queue.len() - 1;
+        for i in 0..=bound{
+            let node = queue.pop_front().unwrap();
+            if i == bound{
+                if let Some(n) = node.clone(){
+                    res.push(n.borrow().val);
+                }
+            }
+            if let Some(n) = node.clone(){
+                if let Some(l) = n.clone().borrow().left.clone() {
+                    queue.push_back(Some(l.clone()));
+                }
+            }
+            if let Some(n) = node.clone(){
+                if let Some(r) = n.clone().borrow().right.clone(){
+                    queue.push_back(Some(r.clone()));
+                }
+            }
+        }
+    }
+    res
 }
 fn main() {
     //Binary Tree
@@ -297,6 +361,12 @@ fn main() {
                 .left(TreeNode::new(6))
                 .right(TreeNode::new(8).right(TreeNode::new(9))),
     );
+
+
+
+    let res = right_side_view(None);
+    println!("{:?}",res);
+
     let dfs = root.dfs_path();
     println!("DFS Traversal Split Path => {:?}", dfs);
 
@@ -336,4 +406,9 @@ fn main() {
     let bfs_leaf = root.bfs_leaf();
     println!("BFS Leaf => {:?}",bfs_leaf);
     
+    let bfs_left_leaf = root.bfs_left_leaf();
+    println!("BFS Left Leaf => {:?}",bfs_left_leaf);
+
+    let bfs_right_leaf = root.bfs_right_leaf();
+    println!("BFS Right Leaf => {:?}",bfs_right_leaf);
 }
