@@ -280,6 +280,22 @@ impl TreeNode {
         }
         res
     }
+    fn invert_tree(&self,node:Option<Rc<RefCell<TreeNode>>>)-> Option<Rc<RefCell<TreeNode>>>{
+        if let Some(ref n) = node{
+            let left = n.borrow().left.clone();
+            let right = n.borrow().right.clone();
+
+            let mut n = n.borrow_mut();
+            n.left = self.invert_tree(right);
+            n.right = self.invert_tree(left);
+        }
+        node
+    }
+    fn invert(&self) ->TreeNode{
+        let node = Some(Rc::new(RefCell::new(self.clone())));
+        let res = self.invert_tree(node);
+        res.unwrap().borrow().clone()
+    }
     // fn insert(&mut self, val: i32) {
     //     if self.val == val {
     //         return;
@@ -411,4 +427,7 @@ fn main() {
 
     let bfs_right_leaf = root.bfs_right_leaf();
     println!("BFS Right Leaf => {:?}",bfs_right_leaf);
+
+    let invert = root.invert();
+    println!("Invert Tree => {:#?}",invert);
 }
