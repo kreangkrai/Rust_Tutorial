@@ -296,6 +296,138 @@ impl TreeNode {
         let res = self.invert_tree(node);
         res.unwrap().borrow().clone()
     }
+    fn traversal_inorder(&self,node:Option<Rc<RefCell<TreeNode>>>,res: &mut Vec<i32>){
+        if let Some(n) = node{
+            self.traversal_inorder(n.borrow().left.clone(), res);
+            res.push(n.borrow().val);
+            self.traversal_inorder(n.borrow().right.clone(), res);
+        }
+    }
+    fn inorder(&self)->Vec<i32>{
+        let tree = self.clone();
+        let mut res = vec![];
+        let node = Some(Rc::new(RefCell::new(tree)));
+        self.traversal_inorder(node,&mut res);
+        res
+    }
+    fn traversal_preorder(&self,node:Option<Rc<RefCell<TreeNode>>>,res: &mut Vec<i32>){
+        if let Some(n) = node{
+            res.push(n.borrow().val);
+            self.traversal_preorder(n.borrow().left.clone(), res);
+            self.traversal_preorder(n.borrow().right.clone(), res);
+        }
+    }
+    fn preorder(&self)->Vec<i32>{
+        let tree = self.clone();
+        let mut res = vec![];
+        let node = Some(Rc::new(RefCell::new(tree)));
+        self.traversal_preorder(node,&mut res);
+        res
+    }
+    fn traversal_postorder(&self,node:Option<Rc<RefCell<TreeNode>>>,res: &mut Vec<i32>){
+        if let Some(n) = node{ 
+            self.traversal_postorder(n.borrow().left.clone(), res);
+            self.traversal_postorder(n.borrow().right.clone(), res);
+            res.push(n.borrow().val);
+        }
+    }
+    fn postorder(&self)->Vec<i32>{
+        let tree = self.clone();
+        let mut res = vec![];
+        let node = Some(Rc::new(RefCell::new(tree)));
+        self.traversal_postorder(node,&mut res);
+        res
+    }
+    fn traversal_search(&self,node:Option<Rc<RefCell<TreeNode>>>,val: i32){
+        if let Some(n) = node{
+            match n.borrow().val.cmp(&val) {
+                std::cmp::Ordering::Equal => {
+                    println!(" => Found Value [{}]",val);
+                }
+                std::cmp::Ordering::Less => {
+                    if n.borrow().right.is_some(){
+                        print!("[{}] -> Right ",n.borrow().val);
+                        self.traversal_search(n.borrow().right.clone(), val);
+                    }else{
+                        print!("[{}] -> Right ",n.borrow().val);
+                        self.traversal_search(None, val);
+                    }
+                }
+                std::cmp::Ordering::Greater =>{
+                    if n.borrow().left.is_some(){
+                        print!("[{}] -> Left ",n.borrow().val);
+                        self.traversal_search(n.borrow().left.clone(), val);
+                    }else{
+                        print!("[{}] -> Left ",n.borrow().val);
+                        self.traversal_search(None, val);
+                    }
+                }
+            }
+        }else{
+            println!(" => Not Found [{}]",val);
+        }
+    }
+    fn search(&self,val:i32){
+        let tree = self.clone();
+        let node = Some(Rc::new(RefCell::new(tree)));
+        self.traversal_search(node, val);
+    }
+
+    fn traversal_parent(&self,mut node:Option<Rc<RefCell<TreeNode>>>,val:i32)->Option<Rc<RefCell<TreeNode>>>{
+        if let Some(n) = node {
+            match n.borrow().val.cmp(&val) {
+                std::cmp::Ordering::Equal => {
+                    return Some(n.clone());
+                }
+                std::cmp::Ordering::Less =>{
+                    if n.borrow().right.is_some(){
+                        node = self.traversal_parent(n.borrow().right.clone(), val);
+                    }else{
+                        node = self.traversal_parent(None, val);
+                    }
+                }
+                std::cmp::Ordering::Greater => {
+                    if n.borrow().left.is_some(){
+                        node = self.traversal_parent(n.borrow().left.clone(), val);
+                    }else{
+                        node = self.traversal_parent(None, val);
+                    }
+                }
+            }
+        }else{
+            return None;
+        }
+        node
+    }
+    fn child_of_parent(&self,val:i32)->Vec<(usize,Vec<i32>)>{
+        let node = Some(Rc::new(RefCell::new(self.clone())));
+        let child = self.traversal_parent(node, val);
+
+        let mut res:Vec<(usize,i32)> = vec![];
+        let mut q = std::collections::VecDeque::new();
+        if let Some(c) = &child.clone(){
+            q.push_back((0,c.clone()));
+            while q.len() > 0 {
+                let (level,c) = q.pop_front().unwrap();
+                res.push((level,c.borrow().val));
+                if let Some(ref l) = c.clone().borrow().left{
+                    q.push_back((level + 1 , l.clone()));
+                }
+                if let Some(ref r) = c.clone().borrow().right{
+                    q.push_back((level + 1 ,r.clone()));
+                }
+            }
+            let mut hm:std::collections::HashMap<usize,Vec<i32>> = std::collections::HashMap::new();
+            for r in res.into_iter(){
+                hm.entry(r.0).or_insert(Vec::new()).push(r.1);
+            }
+            let mut hm_vec:Vec<(usize,Vec<i32>)> = hm.into_iter().collect();
+            hm_vec.sort_by(|a,b| a.0.cmp(&b.0));
+            hm_vec
+        }else{
+            vec![]
+        }
+    }
     // fn insert(&mut self, val: i32) {
     //     if self.val == val {
     //         return;
@@ -427,6 +559,32 @@ fn main() {
 
     let bfs_right_leaf = root.bfs_right_leaf();
     println!("BFS Right Leaf => {:?}",bfs_right_leaf);
+
+    let inorder = root.inorder();
+    println!("Inorder => {:?}",inorder);
+
+    let preorder = root.preorder();
+    println!("Preorder => {:?}",preorder);
+
+    let postorder = root.postorder();
+    println!("Postorder => {:?}",postorder);
+
+    print!("Search => ");
+    root.search(9);
+
+    let child_of_parent = root.child_of_parent(3);
+    println!("Child of Parent => {:?}",child_of_parent);
+    if child_of_parent.len() > 0 {
+        for (key,val) in child_of_parent.into_iter(){
+            print!("Level {:?} => ",key);
+            for v in val.into_iter(){
+                print!("{:?} ",v);
+            }
+            println!();
+        }
+    }else{
+        println!("Empty");
+    }
 
     let invert = root.invert();
     println!("Invert Tree => {:#?}",invert);
