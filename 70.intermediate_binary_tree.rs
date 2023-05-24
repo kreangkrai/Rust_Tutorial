@@ -291,10 +291,9 @@ impl TreeNode {
         }
         node
     }
-    fn invert(&self) ->TreeNode{
+    fn invert(&mut self) {
         let node = Some(Rc::new(RefCell::new(self.clone())));
-        let res = self.invert_tree(node);
-        res.unwrap().borrow().clone()
+        *self = self.invert_tree(node).unwrap().borrow().clone();
     }
     fn traversal_inorder(&self,node:Option<Rc<RefCell<TreeNode>>>,res: &mut Vec<i32>){
         if let Some(n) = node{
@@ -498,7 +497,7 @@ fn main() {
     // tree.insert(6);
     // tree.insert(8);
     // tree.insert(9);
-    let root = TreeNode::new(5)
+    let mut root = TreeNode::new(5)
         .left(
             TreeNode::new(3)
                 .left(TreeNode::new(2).left(TreeNode::new(1)))
@@ -586,6 +585,6 @@ fn main() {
         println!("Empty");
     }
 
-    let invert = root.invert();
-    println!("Invert Tree => {:#?}",invert);
+    root.invert();
+    println!("Invert Tree => {:#?}",root);
 }
